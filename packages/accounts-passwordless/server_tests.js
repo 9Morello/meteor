@@ -4,6 +4,10 @@ import { SHA256 } from 'meteor/sha';
 
 const USER_TOKEN = '123ABC';
 
+// The test suite for accounts-passwordless includes testing whether it gets the right error messages from the server.
+// So, we need this disabled, otherwise those tests incorrectly fail when you run them.
+Accounts._options.ambiguousErrorMessages = false;
+
 const getData = ({ createdAt }) => {
   const userId = Random.id();
   const email = `${userId}@meteorapp.com`;
