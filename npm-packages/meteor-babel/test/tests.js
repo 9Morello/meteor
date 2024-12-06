@@ -163,7 +163,7 @@ describe("@meteorjs/babel", () => {
     );
 
     assert.ok(
-      /regeneratorRuntime.async\(/.test(everythingResult.code),
+      /regeneratorRuntime\(\).async\(/.test(everythingResult.code),
       everythingResult.code
     );
 
