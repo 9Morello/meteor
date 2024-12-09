@@ -1,7 +1,5 @@
 language: node_js
 os: linux
-dist: xenial
+dist: jammy
 node_js:
-  - "16"
-  - "14"
-  - "12"
+  - "22.11.0"
