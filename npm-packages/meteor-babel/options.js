@@ -8,8 +8,6 @@ require = function require(id) {
 };
 
 const babelRuntimeVersion = require("@babel/runtime/package.json").version;
-const babelPresetMeteor = require("babel-preset-meteor");
-const babelPresetMeteorModern = require("babel-preset-meteor/modern");
 const reifyPlugin = require("@meteorjs/reify/plugins/babel");
 
 function getReifyPlugin(features) {
@@ -18,16 +16,16 @@ function getReifyPlugin(features) {
 
 function getReifyOptions(features) {
   const reifyOptions = {
-    avoidModernSyntax: true,
+    avoidModernSyntax: false,
     enforceStrictMode: false,
-    dynamicImport: true
+    dynamicImport: true,
+    generateLetDeclarations: true,
   };
 
   if (features) {
     if (features.modernBrowsers ||
         features.nodeMajorVersion >= 8) {
       reifyOptions.avoidModernSyntax = false;
-      reifyOptions.generateLetDeclarations = true;
     }
 
     if (features.compileForShell) {
@@ -56,13 +54,12 @@ exports.getDefaults = function getDefaults(features) {
   }
 
   const combined = {
-    presets: [],
+    presets: [require("@babel/preset-env")],
     plugins: [getReifyPlugin(features)]
   };
 
   const compileModulesOnly = features && features.compileModulesOnly;
-  if (! compileModulesOnly) {
-    combined.presets.push(babelPresetMeteor);
+  if (!compileModulesOnly) {
 
     const rt = getRuntimeTransform(features);
     if (rt) {
@@ -70,13 +67,6 @@ exports.getDefaults = function getDefaults(features) {
     }
 
     maybeAddReactPlugins(features, combined);
-
-    if (features && features.jscript) {
-      combined.plugins.push(
-        require("./plugins/named-function-expressions.js"),
-        require("./plugins/sanitize-for-in-objects.js")
-      );
-    }
   }
 
   return finish(features, [combined]);
@@ -90,14 +80,12 @@ function maybeAddReactPlugins(features, options) {
 
 function getDefaultsForModernBrowsers(features) {
   const combined = {
-    presets: [],
+    presets: [require("@babel/preset-env")],
     plugins: [getReifyPlugin(features)]
   };
 
   const compileModulesOnly = features && features.compileModulesOnly;
-  if (! compileModulesOnly) {
-    combined.presets.push(babelPresetMeteorModern.getPreset);
-
+  if (!compileModulesOnly) {
     const rt = getRuntimeTransform(features);
     if (rt) {
       combined.plugins.push(rt);
@@ -109,7 +97,10 @@ function getDefaultsForModernBrowsers(features) {
   return finish(features, [combined]);
 }
 
-const parserOpts = require("@meteorjs/reify/lib/parsers/babel.js").options;
+const parserOpts = { ...require("@meteorjs/reify/lib/parsers/babel.js").options,
+  targets: "defaults",
+  sourceType: "script",
+ };
 const util = require("./util.js");
 
 function finish(features, presets) {
@@ -122,10 +113,10 @@ function finish(features, presets) {
     // Disable babel.config.js lookup and processing.
     configFile: false,
     parserOpts: util.deepClone(parserOpts),
-    presets: presets
+    presets,
     targets: {
       node: 22,
-      browsers: ["defaults", "not ie 11"]
+      browsers: ["defaults",  "not ie 11"]
     }
   };
 
@@ -167,24 +158,16 @@ function getRuntimeTransform(features) {
 
 function getDefaultsForNode8(features) {
   const combined = {
-    presets: [],
+    presets: [require("@babel/preset-env")],
     plugins: [getReifyPlugin(features)]
   };
 
   const compileModulesOnly = features.compileModulesOnly;
-  if (! compileModulesOnly) {
-    combined.presets.push(babelPresetMeteorModern.getPreset);
-
+  if (!compileModulesOnly) {
     const rt = getRuntimeTransform(features);
     if (rt) {
       combined.plugins.push(rt);
     }
-
-    // Not fully supported in Node 8 without the --harmony flag.
-    combined.plugins.push(
-      require("@babel/plugin-syntax-object-rest-spread"),
-      require("@babel/plugin-proposal-object-rest-spread")
-    );
 
     if (features.useNativeAsyncAwait === false) {
       combined.plugins.push([
@@ -196,8 +179,6 @@ function getDefaultsForNode8(features) {
         },
       ]);
     }
-    // Enable async generator functions proposal.
-    combined.plugins.push(require("@babel/plugin-proposal-async-generator-functions"));
   }
 
   if (! compileModulesOnly) {
