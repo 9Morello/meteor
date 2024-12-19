@@ -1,13 +1,8 @@
+
+/* left here for backwards compatibility */
 exports.getPreset = function (api, options) {
   return {
-    plugins: [
-      ...require("./proposals.js").plugins,
-      require("@babel/plugin-transform-literals"),
-      require("@babel/plugin-transform-template-literals"),
-      require("@babel/plugin-transform-parameters"),
-      // require("@babel/plugin-transform-unicode-regex"),
-      require("@babel/plugin-transform-exponentiation-operator"),
-    ]
+    plugins: []
   };
 };
 
