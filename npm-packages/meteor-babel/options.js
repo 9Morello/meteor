@@ -123,6 +123,10 @@ function finish(features, presets) {
     configFile: false,
     parserOpts: util.deepClone(parserOpts),
     presets: presets
+    targets: {
+      node: 22,
+      browsers: ["defaults", "not ie 11"]
+    }
   };
 
   if (features && features.typescript) {
