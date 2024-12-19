@@ -45,7 +45,7 @@ function getReifyOptions(features) {
 exports.getDefaults = function getDefaults(features) {
   if (features) {
     if (features.nodeMajorVersion >= 8) {
-      return getDefaultsForNode8(features);
+      return getDefaultsForNode(features);
     }
 
     if (features.modernBrowsers) {
@@ -156,7 +156,7 @@ function getRuntimeTransform(features) {
   }];
 }
 
-function getDefaultsForNode8(features) {
+function getDefaultsForNode(features) {
   const combined = {
     presets: [require("@babel/preset-env")],
     plugins: [getReifyPlugin(features)]
