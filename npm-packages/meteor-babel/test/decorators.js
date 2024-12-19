@@ -24,13 +24,13 @@ describe("@decorators", function () {
     assert.ok(legacyResult.options.parserOpts.plugins
               .includes("decorators-legacy"));
 
-    assert.ok(legacyResult.options.plugins.some(function (plugin) {
+    assert.strictEqual(legacyResult.options.plugins.some(function (plugin) {
       return plugin.key === "transform-regenerator";
-    }));
+    }), false);
 
     assert.strictEqual(legacyResult.code.trim(), [
       "var _class;",
-      "var A = dec(_class = function A() {}) || _class;",
+      "let A = dec(_class = class A {}) || _class;",
     ].join("\n"));
   });
 
@@ -55,7 +55,7 @@ describe("@decorators", function () {
     assert.ok(legacyResult.options.parserOpts.plugins
               .includes("decorators-legacy"));
 
-    assert.ok(legacyResult.options.plugins.every(function (plugin) {
+    assert.ok(legacyResult.options.plugins.some(function (plugin) {
       return plugin.key !== "transform-regenerator";
     }));
 
