@@ -112,7 +112,7 @@ function finish(features, presets) {
     babelrc: false,
     // Disable babel.config.js lookup and processing.
     configFile: false,
-    parserOpts: util.deepClone(parserOpts),
+    parserOpts: structuredClone(parserOpts),
     presets,
     targets: {
       node: 22,
