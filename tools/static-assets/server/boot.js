@@ -30,14 +30,14 @@ var buildDir = path.dirname(programsDir);
 var starJson = JSON.parse(fs.readFileSync(path.join(buildDir, "star.json")));
 
 // Set up environment
-__meteor_bootstrap__ = {
+globalThis.__meteor_bootstrap__ = {
   startupHooks: [],
   serverDir: serverDir,
   configJson: configJson,
   isFibersDisabled: true
 };
 
-__meteor_runtime_config__ = {
+globalThis.__meteor_runtime_config__ = {
   meteorRelease: configJson.meteorRelease,
   gitCommitHash: starJson.gitCommitHash
 };
