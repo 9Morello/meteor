@@ -4,7 +4,7 @@
   "description": "Test app exercising many aspects of the Meteor module system.",
   "private": true,
   "dependencies": {
-    "@babel/core": "^7.23.5",
+    "@babel/core": "7.26.0",
     "@babel/plugin-proposal-do-expressions": "^7.23.3",
     "@babel/runtime": "^7.23.5",
     "@polymer/lit-element": "0.7.1",
