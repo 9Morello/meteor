@@ -15,10 +15,12 @@ var packageJson = {
     "node-gyp": "9.4.0",
     "@mapbox/node-pre-gyp": "1.0.11",
     typescript: "5.6.3",
-    "@meteorjs/babel": "7.20.0",
-    "@meteorjs/reify": "0.25.3",
+    "@babel/parser": "7.26.3",
+    "@9morello/babel-dev": "8.0.1",
+    "@babel/plugin-syntax-top-level-await": "7.14.5",
+    "@meteorjs/reify": "0.25.4",
     // So that Babel can emit require("@babel/runtime/helpers/...") calls.
-    "@babel/runtime": "7.15.3",
+    "@babel/runtime": "7.26.0",
     // For backwards compatibility with isopackets that still depend on
     // babel-runtime rather than @babel/runtime.
     "babel-runtime": "7.0.0-beta.3",

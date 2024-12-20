@@ -30,14 +30,14 @@ var buildDir = path.dirname(programsDir);
 var starJson = JSON.parse(fs.readFileSync(path.join(buildDir, "star.json")));
 
 // Set up environment
-__meteor_bootstrap__ = {
+globalThis.__meteor_bootstrap__ = {
   startupHooks: [],
   serverDir: serverDir,
   configJson: configJson,
   isFibersDisabled: true
 };
 
-__meteor_runtime_config__ = {
+globalThis.__meteor_runtime_config__ = {
   meteorRelease: configJson.meteorRelease,
   gitCommitHash: starJson.gitCommitHash
 };
@@ -142,14 +142,18 @@ var wrapCallSite = function (frame) {
   var frame = origWrapper(frame);
   var wrapGetter = function (name) {
     var origGetter = frame[name];
-    frame[name] = function (arg) {
-      // replace a custom location domain that we set for better UX in Chrome
-      // DevTools (separate domain group) in source maps.
+    try {
+      frame[name] = function (arg) {
+        // replace a custom location domain that we set for better UX in Chrome
+        // DevTools (separate domain group) in source maps.
       var source = origGetter(arg);
       if (! source)
         return source;
-      return source.replace(/(^|\()meteor:\/\/..app\//, '$1');
-    };
+        return source.replace(/(^|\()meteor:\/\/..app\//, '$1');
+      };
+    } catch (e) {
+      console.warn(`Not able to wrap ${name}`);
+    }
   };
   wrapGetter('getScriptNameOrSourceURL');
   wrapGetter('getEvalOrigin');
@@ -429,17 +433,17 @@ const loadServerBundles = Profile("Load server bundles", async function () {
       });
     } else {
       // Allows us to use code-coverage if the debugger is not enabled
-      Profile(fileInfo.path, func).apply(global, args);
+      await (Profile(fileInfo.path, func).apply(global, args));
     }
   }
 
   await maybeWaitForDebuggerToAttach();
 
   for (const info of infos) {
-    info.fn.apply(global, info.args);
+    await info.fn.apply(global, info.args);
   }
   if (global.Package && global.Package['core-runtime']) {
-    return global.Package['core-runtime'].waitUntilAllLoaded();
+    return await global.Package['core-runtime'].waitUntilAllLoaded();
   }
 
   return null;

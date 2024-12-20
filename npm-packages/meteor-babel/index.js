@@ -1,5 +1,9 @@
 "use strict";
 
+console.log('LOCAL METEOR-BABEL');
+console.log('LOCAL METEOR-BABEL');
+console.log('LOCAL METEOR-BABEL');
+
 const assert = require("assert");
 const Cache = require("./cache.js");
 const util = require("./util.js");

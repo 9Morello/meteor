@@ -323,6 +323,10 @@ export default defineConfig({
             link: "/packages/hot-module-replacement",
           },
           {
+            text: "roles",
+            link: "/packages/roles",
+          },
+          {
             text: "less",
             link: "/packages/less",
           },

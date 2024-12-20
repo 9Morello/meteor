@@ -98,10 +98,14 @@ function getDefaultsForModernBrowsers(features) {
 }
 
 const parserOpts = { ...require("@meteorjs/reify/lib/parsers/babel.js").options,
-  targets: "defaults",
-  sourceType: "script",
+  targets: {
+    node: 22,
+    browsers: ["defaults",  "not ie 11"]
+  },
+  sourceType: "unambiguous",
+  strictMode: false
  };
-const util = require("./util.js");
+//const util = require("./util.js");
 
 function finish(features, presets) {
   const options = {
@@ -112,7 +116,7 @@ function finish(features, presets) {
     babelrc: false,
     // Disable babel.config.js lookup and processing.
     configFile: false,
-    parserOpts: util.deepClone(parserOpts),
+    parserOpts: structuredClone(parserOpts),
     presets,
     targets: {
       node: 22,

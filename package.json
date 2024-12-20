@@ -13,7 +13,7 @@
   },
   "homepage": "https://github.com/meteor/meteor#readme",
   "devDependencies": {
-    "@babel/core": "^7.21.3",
+    "@babel/core": "7.26.0",
     "@babel/eslint-parser": "^7.21.3",
     "@babel/eslint-plugin": "^7.19.1",
     "@babel/preset-react": "^7.18.6",

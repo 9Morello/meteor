@@ -2294,10 +2294,7 @@ class JsImage {
     }
 
     if (ret['core-runtime']) {
-      var promise = ret['core-runtime'].waitUntilAllLoaded();
-      if (promise) {
-        await promise
-      }
+      await ret['core-runtime'].waitUntilAllLoaded();
     }
 
     return ret;
