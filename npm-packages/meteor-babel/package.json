@@ -1,10 +1,13 @@
 {
-  "name": "@meteorjs/babel",
+  "name": "@9morello/babel-dev",
   "author": "Meteor <dev@meteor.com>",
-  "version": "7.20.2",
+  "version": "8.0.1",
   "license": "MIT",
   "type": "commonjs",
   "description": "Babel wrapper package for use with Meteor",
+  "publishConfig": {
+    "access": "restricted"
+  },
   "keywords": [
     "meteor",
     "babel",

@@ -1,6 +1,6 @@
 var meteorBabel = null;
 function getMeteorBabel() {
-  return meteorBabel || (meteorBabel = Npm.require("@meteorjs/babel"));
+  return meteorBabel || (meteorBabel = Npm.require("@9morello/babel-dev"));
 }
 
 /**
@@ -46,7 +46,7 @@ Babel = {
   },
 
   getMinimumModernBrowserVersions: function () {
-    return Npm.require("@meteorjs/babel/modern-versions.js").get();
+    return Npm.require("@9morello/babel-dev/modern-versions.js").get();
   },
 
   compileForShell(command, cacheOptions) {

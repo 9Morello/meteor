@@ -11,12 +11,9 @@ function contains(haystack, needle) {
 };
 
 Tinytest.add("ecmascript - transpilation - const", (test) => {
-  // make sure `const` is turned into `var` (rather than passing
-  // through, such as when you have es6.blockScoping on but
-  // es6.constants off)
   const output = transform('const x = 5;');
-  test.isFalse(contains(output, 'const'));
-  test.isTrue(contains(output, 'var'));
+  test.isTrue(contains(output, 'const'));
+  test.isFalse(contains(output, 'var'));
 });
 
 Tinytest.add("ecmascript - transpilation - class methods", (test) => {
@@ -35,12 +32,12 @@ Tinytest.add("ecmascript - transpilation - class methods", (test) => {
   }
 }`);
 
-  // test that we are in "loose" mode and methods of classes are still
-  // assigned in a simple matter that does rely on Object.defineProperty.
-  test.isTrue(contains(output, 'Foo.staticMethod = function staticMethod('));
-  test.isTrue(contains(output,
+  // the compiled output should be very similar to the input with modern Babel.
+  // We aren't forcing CJS output anymore. So ES classes and all that are fine in the output.
+  test.isFalse(contains(output, 'Foo.staticMethod = function staticMethod('));
+  test.isFalse(contains(output,
                        '.prototypeMethod = function prototypeMethod('));
-  test.isTrue(contains(output, '[_computedMethod] = function ('));
+  test.isFalse(contains(output, '[_computedMethod] = function ('));
   test.isFalse(contains(output, 'createClass'));
 });
 
@@ -52,11 +49,13 @@ class Foo {
   }
 }`);
 
-  // Babel 7 no longer imports the classCallCheck helper in loose mode.
   test.equal(output, [
-    "var Foo = function Foo(x) {",
-    "  this.x = x;",
-    "};"
+    `"use strict";\n`,
+    `class Foo {`,
+    `  constructor(x) {`,
+    `    this.x = x;`,
+    `  }`,
+    `}`,
   ].join("\n"));
 });
 
@@ -66,7 +65,7 @@ class Foo {}
 class Bar extends Foo {}
 `);
 
-  test.isTrue(/helpers\/(builtin\/)?inherits/.test(output));
+  test.isFalse(/helpers\/(builtin\/)?inherits/.test(output));
 });
 
 Tinytest.add("ecmascript - transpilation - helpers - bind", (test) => {
@@ -74,17 +73,17 @@ Tinytest.add("ecmascript - transpilation - helpers - bind", (test) => {
     "var foo = new Foo(...oneTwo, 3);"
   );
 
-  test.isTrue(output.match(/@babel\/runtime\/helpers\/construct\b/));
+  test.isFalse(output.match(/@babel\/runtime\/helpers\/construct\b/));
 });
 
 Tinytest.add("ecmascript - transpilation - helpers - extends", (test) => {
   const output = transform("class A extends getBaseClass() {}");
-  test.isTrue(/helpers\/inheritsLoose/.test(output));
+  test.isFalse(/helpers\/inheritsLoose/.test(output));
 });
 
 Tinytest.add("ecmascript - transpilation - helpers - objectSpread", (test) => {
   const output = transform("var full = {a:1, ...middle, d:4};");
-  test.isTrue(/objectSpread/.test(output));
+  test.isFalse(/objectSpread/.test(output));
 });
 
 Tinytest.add("ecmascript - transpilation - helpers - objectWithoutProperties", (test) => {
@@ -92,7 +91,7 @@ Tinytest.add("ecmascript - transpilation - helpers - objectWithoutProperties", (
 var {a, ...rest} = obj;
 `);
 
-  test.isTrue(/helpers\/(builtin\/)?objectWithoutProperties/.test(output));
+  test.isFalse(/helpers\/(builtin\/)?objectWithoutProperties/.test(output));
 });
 
 Tinytest.add("ecmascript - transpilation - helpers - objectDestructuringEmpty", (test) => {
@@ -100,7 +99,7 @@ Tinytest.add("ecmascript - transpilation - helpers - objectDestructuringEmpty", 
 var {} = null;
 `);
 
-  test.isTrue(/helpers\/(builtin\/)?objectDestructuringEmpty/.test(output));
+  test.isFalse(/helpers\/(builtin\/)?objectDestructuringEmpty/.test(output));
 });
 
 Tinytest.add("ecmascript - transpilation - helpers - taggedTemplateLiteralLoose", (test) => {
@@ -108,7 +107,7 @@ Tinytest.add("ecmascript - transpilation - helpers - taggedTemplateLiteralLoose"
 var x = asdf\`A\${foo}C\`
 `);
 
-  test.isTrue(/helpers\/(builtin\/)?taggedTemplateLiteralLoose/.test(output));
+  test.isFalse(/helpers\/(builtin\/)?taggedTemplateLiteralLoose/.test(output));
 });
 
 Tinytest.add("ecmascript - transpilation - helpers - createClass", (test) => {
@@ -117,6 +116,6 @@ class Foo {
   get blah() { return 123; }
 }
 `);
-
-  test.isTrue(/helpers\/(builtin\/)?createClass/.test(output));
+  /* shouldn't use createClass when generating modern JS */
+  test.isFalse(/helpers\/(builtin\/)?createClass/.test(output));
 });

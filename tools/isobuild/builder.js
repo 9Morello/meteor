@@ -366,7 +366,7 @@ Previous builder: ${previousBuilder.outputPath}, this builder: ${outputPath}`
       return;
     }
 
-    const babel = require("@meteorjs/babel");
+    const babel = require("@9morello/babel-dev");
     const commonBabelOptions = babel.getDefaultOptions({
       nodeMajorVersion: parseInt(process.versions.node),
       typescript: true,

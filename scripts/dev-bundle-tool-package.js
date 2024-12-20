@@ -14,7 +14,7 @@ var packageJson = {
     "node-gyp": "10.2.0",
     "@mapbox/node-pre-gyp": "1.0.11",
     typescript: "5.6.3",
-    "@meteorjs/babel": "7.20.0",
+    "@9morello/babel-dev": "8.0.1",
     // Keep the versions of these packages consistent with the versions
     // found in dev-bundle-server-package.js.
     "@meteorjs/reify": "0.25.4",

@@ -1111,7 +1111,7 @@ export function runJavaScript(code: string, {
       // node to run the code and parse its output. We instead run an
       // entirely different JS parser, from the Babel project, but
       // which at least has a nice API for reporting errors.
-      const { parse } = require('@meteorjs/babel');
+      const { parse } = require('@9morello/babel-dev');
       try {
         parse(wrapped, { strictMode: false });
       } catch (parseError: any) {

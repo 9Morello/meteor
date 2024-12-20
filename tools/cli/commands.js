@@ -1978,7 +1978,7 @@ main.registerCommand({
 // test and test-packages
 ///////////////////////////////////////////////////////////////////////////////
 
-testCommandOptions = {
+const testCommandOptions = {
   maxArgs: Infinity,
   catalogRefresh: new catalog.Refresh.Never(),
   options: {
